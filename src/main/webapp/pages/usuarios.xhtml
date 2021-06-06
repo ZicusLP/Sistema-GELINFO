@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSystem.xhtml">
+
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="frmusuario">
+
+			<p:dataTable id="tbusuario" widgetVar="tabelaUsuario"
+				emptyMessage="Nenhum registro encontrado!"
+				value="#{MBUsuario.itens}" var="item"
+				filteredValue="#{MBUsuario.itensFiltrados}" paginator="true"
+				rows="10" reflow="true" resizableColumns="true">
+
+				<f:facet name="header">Lista de Usuários</f:facet>
+
+
+				<p:column headerText="Nome" sortBy="#{item.nome}"
+					filterBy="#{item.nome}">
+					<h:outputText value="#{item.nome}" />
+				</p:column>
+
+				<p:column headerText="Login" sortBy="#{item.login}"
+					filterBy="#{item.login}">
+					<h:outputText value="#{item.login}" />
+				</p:column>
+
+				<p:column headerText="Telefone">
+					<h:outputText value="#{item.telefone}" />
+				</p:column>
+
+				<p:column headerText="Perfil" sortBy="#{item.perfil}"
+					filterBy="#{item.perfil}">
+					<h:outputText value="#{item.perfil}" />
+				</p:column>
+
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-pencil"
+						oncomplete="PF('dlgusuarioEditar').show();"
+						update=":frmusuarioEditar:pnusuarioEditar">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBUsuario.usuario}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash"
+						oncomplete="PF('dlgusuarioExcluir').show();"
+						update=":frmusuarioExcluir:pnusuarioExcluir">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBUsuario.usuario}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Novo"
+						actionListener="#{MBUsuario.prepararInserir}"
+						oncomplete="PF('dlgusuarioNovo').show();"
+						update=":frmusuarioNovo:pnusuarioNovo" />
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog widgetVar="dlgusuarioNovo" closable="false"
+			draggable="false" resizable="false" header="Cadastrar Usuario"
+			modal="true" appendTo="@(body)">
+			<h:form id="frmusuarioNovo">
+				<h:panelGrid id="pnusuarioNovo" columns="2">
+
+					<p:outputLabel value="Perfil" for="txtuserNovo"  />
+					<p:selectOneMenu value="#{MBUsuario.usuario.perfil}"
+					filter = "true"
+					>
+						<f:selectItem itemValue="" itemLabel="Selecione o Perfil" />
+						<f:selectItems value="#{MBUsuario.usuario.perfil}" var="item"
+							itemValue="#{item.codigo_usuario}"
+							itemLabel="#{item.perfil}">
+						</f:selectItems>
+					</p:selectOneMenu>
+					
+					
+					<p:outputLabel value="Nome do Usuario" for="txtuserNovo"  />
+					<h:inputText size="30" maxlength="50" 
+						value="#{MBUsuario.usuario.nome}" 
+						id="txtuserNovo"
+						required="true" 
+						requiredMessage="Preencha todos os campos!"  />
+					<p:outputLabel value="Login" for="txtuserNovo"  />
+					<h:inputText size="30" maxlength="20"
+						value="#{MBUsuario.usuario.login}"
+						required="true" 
+						requiredMessage="Preencha todos os campos!"  />
+					<p:outputLabel value="Senha" for="txtuserNovo"  />
+					<h:inputSecret size="15" maxlength="11"
+						value="#{MBUsuario.usuario.senha}" 
+						required="true" 
+						requiredMessage="Preencha todos os campos!" />
+					<p:outputLabel value="telefone" />
+					<h:inputText size="15" maxlength="12"
+						value="#{MBUsuario.usuario.telefone}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Gravar"
+						actionListener="#{MBUsuario.inserir}"
+						oncomplete="verificar(xhr, status, args, 'dlgusuarioNovo', 'tbusuario');"
+						update="frmusuario:tbusuario :msgGlobal" />
+					<p:commandButton value="Cancelar" 
+						process="@this"
+						onclick="PF('dlgusuarioNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgusuarioExcluir" closable="false"
+			draggable="false" resizable="false" header="Excluir Usuario"
+			modal="true" appendTo="@(body)">
+
+			<h:form id="frmusuarioExcluir">
+				<h:panelGrid id="pnusuarioExcluir">
+					<h:outputText value="Nome" />
+					<h:outputText value="#{MBUsuario.usuario.nome}" />
+					<h:outputText value="Login" />
+					<h:outputText value="#{MBUsuario.usuario.login}" />
+					<h:outputText value="Cargo" />
+					<h:outputText value="#{MBUsuario.usuario.perfil}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Excluir"
+						actionListener="#{MBUsuario.excluir}"
+						oncomplete="PF('dlgusuarioExcluir').hide(); PF('tabelaUsuario').clearFilters();"
+						update="frmusuario:tbusuario :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						process="@this"
+						onclick="PF('dlgusuarioExcluir').hide(); " />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgusuarioEditar" closable="false"
+			draggable="false" resizable="false" header="Editar Usuario"
+			modal="true" appendTo="@(body)">
+
+			<h:form id="frmusuarioEditar">
+				<h:panelGrid id="pnusuarioEditar">
+					<h:outputText value="Nome" for="txtuserNovo" />
+					<h:inputText value="#{MBUsuario.usuario.nome}" 
+						id="txtuserNovo"
+						required="true" 
+						requiredMessage="Preencha todos os campos!" />
+					<h:outputText value="Login" for="txtuserNovo" />
+					<h:inputText value="#{MBUsuario.usuario.login}" 
+						required="true" 
+						requiredMessage="Preencha todos os campos!"/>
+					<h:outputText value="Telefone" />
+					<h:inputText value="#{MBUsuario.usuario.telefone}" />
+					<h:outputText value="Cargo" for="txtuserNovo" />
+					<h:inputText value="#{MBUsuario.usuario.perfil}" 
+						required="true" 
+						requiredMessage="Preencha todos os campos!"/>
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Editar"
+						actionListener="#{MBUsuario.editar}"
+						oncomplete="verificar(xhr, status, args, 'dlgusuarioEditar', 'tbusuario');"
+						update="frmusuario:tbusuario :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						onclick="PF('dlgusuarioEditar').hide();" />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="options">
+		<ui:include src="/includes/calendario.xhtml" />
+	</ui:define>
+
+
+</ui:composition>

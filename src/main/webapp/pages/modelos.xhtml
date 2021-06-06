@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSystem.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="frmodelo">
+
+			<p:dataTable id="tbmodelo" widgetVar="tabelaModelo"
+				emptyMessage="Nenhum registro encontrado!" value="#{MBModelo.itens}"
+				var="item" filteredValue="#{MBModelo.itensFiltrados}"
+				reflow ="true" resizableColumns="true"
+				paginator="true" rows="10">
+
+				<f:facet name="header">Lista de Modelos</f:facet>
+				
+				<p:column headerText="Nome" sortBy="#{item.nomemodelo}"
+					filterBy="#{item.nomemodelo}">
+					<h:outputText value="#{item.nomemodelo}" />
+				</p:column>
+
+				<p:column headerText="Marca" sortBy="#{item.marca_codigo}"
+					filterBy="#{item.marca_codigo}">
+					<h:outputText value="#{item.marcas.marcanome}" />
+				</p:column>
+				
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-pencil"
+						oncomplete="PF('dlgmodeloEditar').show();"
+						update=":frmodeloEditar:pnmodeloEditar">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBModelo.modelos}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash"
+						oncomplete="PF('dlgmodeloExcluir').show();"
+						update=":frmodeloExcluir:pnmodeloExcluir">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBModelo.modelos}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Novo"
+						actionListener="#{MBModelo.prepararInserir}"
+						oncomplete="PF('dlgmodeloNovo').show();"
+						update=":frmodeloNovo:pnmodeloNovo" />
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog widgetVar="dlgmodeloNovo" closable="false" draggable="false"
+			resizable="false" header="Cadastrar Modelo" modal="true"
+			appendTo="@(body)" update=":frmodeloNovo:pnmodeloNovo :msgGlobal">
+			<h:form id="frmodeloNovo">
+				<h:panelGrid id="pnmodeloNovo" columns="2">
+
+					<p:outputLabel value="Marca" for="txtmodNovo"  />
+					<p:selectOneMenu value="#{MBModelo.modelos.marcas.nomemarca}"
+					filter = "true"
+					>
+						<f:selectItem itemValue="" itemLabel="Selecione a Marca" />
+						<f:selectItems value="#{MBModelo.comboMarcas}" var="item"
+							itemValue="#{item.codigo_marca}"
+							itemLabel="#{item.nomemarca}">
+						</f:selectItems>
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Nome do modelo" for="txtmodNovo" />
+					<h:inputText size="30" maxlength="50" id="txtmodNovo"
+						value="#{MBModelo.modelos.nomemodelo}"
+						required="true" 
+						requiredMessage="Preencha todos os campos!" />
+				
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Gravar" actionListener="#{MBModelo.inserir}"
+						oncomplete="verificar(xhr, status, args, 'dlgmodeloNovo', 'tbmodelo');"
+						update="frmodelo:tbmodelo :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						process="@this"
+						onclick="PF('dlgmodeloNovo').hide();" />
+
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgmodeloExcluir" closable="false" draggable="false"
+			resizable="false" header="Excluir Modelo" modal="true"
+			appendTo="@(body)">
+
+			<h:form id="frmodeloExcluir">
+				<h:panelGrid id="pnmodeloExcluir">
+					<h:outputText value="Nome" />
+					<h:outputText value="#{MBModelo.modelos.nomemodelo}" />
+					<h:outputText value="Marca" />
+					<h:outputText value="#{MBModelo.modelos.marca.nomemarca}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Excluir"
+						actionListener="#{MBModelo.excluir}"
+						oncomplete="PF('dlgmodeloExcluir').hide(); PF('tabelaModelo').clearFilters();"
+						update="frmodelo:tbmodelo :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						process="@this"
+						onclick="PF('dlgmodeloExcluir').hide(); " />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgmodeloEditar" closable="false" draggable="false"
+			resizable="false" header="Editar Modelo" modal="true"
+			appendTo="@(body)">
+
+			<h:form id="frmodeloEditar">
+				<h:panelGrid id="pnmodeloEditar">
+					<h:outputText value="Nome" />
+					<h:inputText value="#{MBModelo.modelos.nomemodelo}" id="txtEdtModelo" />
+					
+					<p:outputLabel value="Marca" for="txtEdtModelo"  />
+					<p:selectOneMenu value="#{MBModelo.modelos.marca.nomemarca}"
+					filter = "true"
+					>
+						<f:selectItem itemValue="" itemLabel="Selecione a Marca" />
+						<f:selectItems value="#{MBModelo.comboMarcas}" var="item"
+							itemValue="#{item.codigo_marca}"
+							itemLabel="#{item.nomemarca}">
+						</f:selectItems>
+					</p:selectOneMenu>
+				</h:panelGrid>	
+				
+				<h:panelGrid columns="2">
+					<p:commandButton value="Editar" actionListener="#{MBModelo.editar}"
+						oncomplete="PF('dlgmodeloEditar').hide(); PF('tabelaModelo').clearFilters();"
+						update="frmodelo:tbmodelo :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						process="@this"
+						onclick="PF('dlgmodeloEditar').hide();" />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="options">
+		<ui:include src="/includes/calendario.xhtml" />
+	</ui:define>
+
+
+
+</ui:composition>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSystem.xhtml">
+	
+	<ui:define name="menu">
+		<ui:include src="/includes/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="frmbairro">
+
+			<p:dataTable id="tbbairro"
+				widgetVar="tabelaBairro"
+				emptyMessage="Nenhum registro encontrado!"
+				value="#{MBBairro.itens}" var="item" filteredValue="#{MBBairro.itensFiltrados}" paginator="true" rows="10"
+				reflow="true" resizableColumns="false">
+
+				<f:facet name="header">Lista de Bairros</f:facet>
+				
+
+				<p:column headerText="Nome" sortBy="#{item.nomebairro}"
+					filterBy="#{item.nomebairro}">
+					<h:outputText value="#{item.nomebairro}" 
+					/>
+				</p:column>
+
+				<p:column headerText="Endereço" sortBy="#{item.endereco}"
+					filterBy="#{item.endereco}">
+					<h:outputText value="#{item.endereco}" />
+				</p:column>
+
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-pencil" 
+						oncomplete="PF('dlgbairroEditar').show();"
+						update=":frmbairroEditar:pnbairroEditar">
+					<f:setPropertyActionListener value="#{item}" target="#{MBBairro.bairro}"></f:setPropertyActionListener>	
+					</p:commandButton>	
+					
+					<p:commandButton icon="ui-icon-trash" 
+						oncomplete="PF('dlgbairroExcluir').show();"
+						update=":frmbairroExcluir:pnbairroExcluir">
+					<f:setPropertyActionListener value="#{item}" target="#{MBBairro.bairro}"></f:setPropertyActionListener>	
+					</p:commandButton>
+						
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Novo"
+						actionListener="#{MBBairro.prepararInserir}"
+						oncomplete="PF('dlgbairroNovo').show();"
+						update=":frmbairroNovo:pnbairroNovo" />
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog widgetVar="dlgbairroNovo" closable="false" draggable="false"
+			resizable="false" header="Cadastrar Bairro" modal="true"
+			appendTo="@(body)">
+			<h:form id="frmbairroNovo">
+				<h:panelGrid id="pnbairroNovo" columns="2">
+					<p:outputLabel value="Nome do Bairro" for="txtuserNovo"/>
+					<h:inputText size="30" maxlength="50"
+						value="#{MBBairro.bairro.nomebairro}" 
+						id="txtuserNovo"
+						required="true" 
+						requiredMessage="Preencha todos os campos!"/>
+					<p:outputLabel value="Endereço" for="txtuserNovo"/>
+					<h:inputText size="30" maxlength="60"
+						value="#{MBBairro.bairro.endereco}"
+						required="true" 
+						requiredMessage="Preencha todos os campos!" />
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Gravar"
+						actionListener="#{MBBairro.inserir}"
+						oncomplete="verificar(xhr, status, args, 'dlgbairroNovo', 'tbbairro');"
+						update="frmbairro:tbbairro :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						onclick="PF('dlgbairroNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgbairroExcluir" closable="false" draggable="false"
+			resizable="false" header="Excluir Bairro" modal="true"
+			appendTo="@(body)">
+
+			<h:form id="frmbairroExcluir">
+				<h:panelGrid id="pnbairroExcluir">
+					<h:outputText value="Nome" />
+					<h:outputText value="#{MBBairro.bairro.nomebairro}" />
+					<h:outputText value="Endereço" />
+					<h:outputText value="#{MBBairro.bairro.endereco}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Excluir"
+						actionListener="#{MBBairro.excluir}"
+						oncomplete="PF('dlgbairroExcluir').hide(); PF('tabelaBairro').clearFilters();"
+						update="frmbairro:tbbairro :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						onclick="PF('dlgbairroExcluir').hide(); " />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+		
+		<p:dialog widgetVar="dlgbairroEditar" closable="false" draggable="false"
+			resizable="false" header="Editar Bairro" modal="true"
+			appendTo="@(body)">
+
+			<h:form id="frmbairroEditar">
+				<h:panelGrid id="pnbairroEditar">
+					<h:outputText value="Nome" />
+					<h:inputText value="#{MBBairro.bairro.nomebairro}" />
+					<h:outputText value="Endereço" />
+					<h:inputText value="#{MBBairro.bairro.endereco}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Editar"
+						actionListener="#{MBBairro.editar}"
+						oncomplete="PF('dlgbairroEditar').hide(); PF('tabelaBairro').clearFilters();"
+						update="frmbairro:tbbairro :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						onclick="PF('dlgbairroEditar').hide();" />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+		
+
+	</ui:define>
+
+
+
+	<ui:define name="options">
+		<ui:include src="/includes/calendario.xhtml" />
+	</ui:define>
+
+
+
+</ui:composition>

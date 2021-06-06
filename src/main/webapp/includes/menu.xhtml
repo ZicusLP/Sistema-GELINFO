@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	>
+	
+
+
+	<h:form>
+
+
+
+		<p:menubar>
+			<p:submenu label="Cadastros">
+				<p:menuitem value="Perfil" outcome="/pages/perfil.xhtml" />
+				<p:menuitem value="Usuários" outcome="/pages/usuarios.xhtml" />
+				<p:separator/>
+				<p:menuitem value="Secretarias" outcome="/pages/secretarias.xhtml"/>
+				<p:menuitem value="Setores" outcome="/pages/setores.xhtml" />
+				<p:menuitem value="Bairros" outcome="/pages/bairros.xhtml" />
+				<p:separator/>
+				<p:menuitem value="Marcas" outcome="/pages/marcas.xhtml"/>
+				<p:menuitem value="Modelos" outcome="/pages/modelos.xhtml"/>
+				<p:separator/>
+				<p:submenu label="Equipamentos">
+					<p:menuitem value="CPU" outcome="/pages/cpu.xhtml"/>
+					<p:menuitem value="Monitores" outcome="/pages/monitores.xhtml"/>
+					<p:menuitem value="Impressoras" outcome="/pages/impressoras.xhtml"/>
+					<p:menuitem value="Roteadores" outcome="/pages/roteadores.xhtml"/>
+					<p:menuitem value="Servidores" outcome="/pages/servidores.xhtml"/>
+					<p:menuitem value="Nobreak's" outcome="/pages/nobreak.xhtml"/>
+				</p:submenu>
+			</p:submenu>
+			<p:submenu label="Inventário" >
+				<p:menuitem value="Abrir" outcome="/pages/inventario.xhtml" />
+				<p:menuitem value="Registrar" />
+				<p:menuitem value="Fechar" />
+			</p:submenu>
+			<p:submenu label="Consultas">
+				<p:menuitem value="Quantidade de equipamentos" />
+				<p:menuitem value="Quantidade por setor" />
+			</p:submenu>
+			<p:submenu label="Ajuda">
+				<p:menuitem value="Sobre" outcome="/pages/sobre.xhtml" />
+			</p:submenu>
+			<p:submenu label="Sair">
+			<p:menuitem value = "Logout" outcome="/includes/login.jsp"/>
+			</p:submenu>
+		</p:menubar>
+
+	</h:form>
+
+</ui:composition>

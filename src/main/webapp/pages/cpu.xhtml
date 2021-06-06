@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSystem.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="frmcpu">
+
+			<p:dataTable id="tbcpu" widgetVar="tabelaCpu"
+				emptyMessage="Nenhum registro encontrado!" value="#{MBCpu.itens}"
+				var="item" filteredValue="#{MBCpu.itensFiltrados}" reflow ="true" resizableColumns="true"
+				paginator="true" rows="10">
+
+				<f:facet name="header">Lista de CPU'S</f:facet>
+				
+				<p:column headerText="Equipamento" width="25px"
+					>
+					<h:outputText value="#{item.nomesetor}" />
+				</p:column>
+				
+				<p:column headerText="Patrimônio" 
+					filterBy="#{item.patrimonio}">
+					<h:outputText value="#{item.patrimonio}" />
+				</p:column>
+				
+				<p:column headerText="N° Patrimônio" 
+					filterBy="#{item.npatrimonio}">
+					<h:outputText value="#{item.npatrimonio}" />
+				</p:column>
+				
+				<p:column headerText="N° de Série" 
+					filterBy="#{item.nserie}">
+					<h:outputText value="#{item.nserie}" />
+				</p:column>
+				
+				<p:column headerText="Marca" sortBy="#{item.nomemarca}"
+					filterBy="#{item.nomemarca}">
+					<h:outputText value="#{item.nomemarca}" />
+				</p:column>
+				
+				<p:column headerText="Modelo" sortBy="#{item.nomemodelo}"
+					filterBy="#{item.nomemodelo}">
+					<h:outputText value="#{item.nomemodelo}" />
+				</p:column>
+				
+				<p:column headerText="Secretaria" sortBy="#{item.secretaria_codigo_secretaria}"
+					filterBy="#{item.secretaria_codigo_secretaria}">
+					<h:outputText value="#{item.secretaria.siglasec}" />
+				</p:column>
+				
+				<p:column headerText="Setor" sortBy="#{item.nomesetor}"
+					filterBy="#{item.nomesetor}">
+					<h:outputText value="#{item.nomesetor}" />
+				</p:column>
+
+				<p:column headerText="IP" filterBy="#{item.andarsetor}">
+					<h:outputText value="#{item.andarsetor}" />
+				</p:column>
+				
+				<p:column headerText="Bairro" sortBy="#{item.bairro_codigo_bairro}"
+					filterBy="#{item.bairro_codigo_bairro}">
+					<h:outputText value="#{item.bairro.nomebairro}" />
+				</p:column>
+				
+				<p:column headerText="Endereço" 
+					filterBy="#{item.bairro_codigo_bairro}">
+					<h:outputText value="#{item.bairro.endereco}" />
+				</p:column>
+				
+				<p:column headerText="HD" 
+					filterBy="#{item.nomesetor}">
+					<h:outputText value="#{item.nomesetor}" />
+				</p:column>
+				
+				<p:column headerText="Processador" 
+					filterBy="#{item.nomesetor}">
+					<h:outputText value="#{item.nomesetor}" />
+				</p:column>
+				
+				<p:column headerText="RAM" 
+					filterBy="#{item.nomesetor}">
+					<h:outputText value="#{item.nomesetor}" />
+				</p:column>
+
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-pencil"
+						oncomplete="PF('dlgcpuEditar').show();"
+						update=":frmcpuEditar:pncpuEditar">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBCpu.setor}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash"
+						oncomplete="PF('dlgcpuExcluir').show();"
+						update=":frmcpuExcluir:pncpuExcluir">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBCpu.setor}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Novo"
+						actionListener="#{MBCpu.prepararInserir}"
+						oncomplete="PF('dlgcpuNovo').show();"
+						update=":frmcpuNovo:pncpuNovo" />
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog widgetVar="dlgcpuNovo" closable="false" draggable="false"
+			resizable="false" header="Cadastrar Setor" modal="true"
+			appendTo="@(body)" update=":frmcpuNovo:pncpuNovo :msgGlobal">
+			<h:form id="frmcpuNovo">
+				<h:panelGrid id="pncpuNovo" columns="2">
+
+					<p:outputLabel value="Secretaria" for="txtsetNovo"  />
+					<p:selectOneMenu value="#{MBSetor.setor.secretaria.siglasec}"
+					filter = "true"
+					>
+						<f:selectItem itemValue="" itemLabel="Selecione a Secretaria" />
+						<f:selectItems value="#{MBCpu.comboSecretarias}" var="item"
+							itemValue="#{item.codigo_secretaria}"
+							itemLabel="#{item.siglasec}">
+						</f:selectItems>
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Endereço" for="txtsetNovo"  />
+					<p:selectOneMenu value="#{MBCpu.setor.bairro.endereco}"
+					filter = "true"
+					>
+						<f:selectItem itemValue="" itemLabel="Selecione o endereço" />
+						<f:selectItems value="#{MBCpu.comboBairros}" var="item"
+							itemValue="#{item.codigo_bairro}" 
+							itemLabel="#{item.endereco}">
+						</f:selectItems>
+					</p:selectOneMenu>
+					
+					<p:outputLabel value="Nome do setor" for="txtsetNovo" />
+					<h:inputText size="30" maxlength="50" id="txtsetNovo"
+						value="#{MBCpu.cpu.setor.nomesetor}"
+						required="true" 
+						requiredMessage="Preencha todos os campos!" />
+					<p:outputLabel value="Sigla" for="txtsetNovo"  />
+					<h:inputText size="30" maxlength="10"
+						value="#{MBCpu.cpu.setor.siglasetor}" 
+						required="true" 
+						requiredMessage="Preencha todos os campos!"/>
+					<p:outputLabel value="Andar" for="txtsetNovo"  />
+					<h:inputText size="30" maxlength="10"
+						value="#{MBCpu.cpu.setor.andarsetor}"
+						required="true" 
+						requiredMessage="Preencha todos os campos!" />
+
+
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Gravar" actionListener="#{MBCpu.inserir}"
+						oncomplete="verificar(xhr, status, args, 'dlgcpuNovo', 'tbcpu');"
+						update="frmcpu:tbcpu :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						process="@this"
+						onclick="PF('dlgcpuNovo').hide();" />
+
+
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgsetorExcluir" closable="false" draggable="false"
+			resizable="false" header="Excluir Setor" modal="true"
+			appendTo="@(body)">
+
+			<h:form id="frmsetorExcluir">
+				<h:panelGrid id="pnsetorExcluir">
+					<h:outputText value="Nome" />
+					<h:outputText value="#{MBCpu.cpu.setor.nomesetor}" />
+					<h:outputText value="Sigla" />
+					<h:outputText value="#{MBCpu.cpu.setor.siglasetor}" />
+					<h:outputText value="Andar" />
+					<h:outputText value="#{MBCpu.cpu.setor.andarsetor}" />
+					<h:outputText value="Bairro" />
+					<h:outputText value="#{MBCpu.cpu.bairro.nomebairro}" />
+					<h:outputText value="Endereço" />
+					<h:outputText value="#{MBCpu.cpu.bairro.endereco}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Excluir"
+						actionListener="#{MBCpu.excluir}"
+						oncomplete="PF('dlgcpuExcluir').hide(); PF('tabelaCpu').clearFilters();"
+						update="frmcpu:tbcpu :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						process="@this"
+						onclick="PF('dlgcpuExcluir').hide(); " />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgsetorEditar" closable="false" draggable="false"
+			resizable="false" header="Editar Setor" modal="true"
+			appendTo="@(body)">
+
+			<h:form id="frmsetorEditar">
+				<h:panelGrid id="pnsetorEditar">
+					<h:outputText value="Nome" />
+					<h:inputText value="#{MBCpu.cpu.setor.nomesetor}" id="txtEdtSetor" />
+					<h:outputText value="Sigla" />
+					<h:inputText value="#{MBCpu.cpu.detor.siglasetor}" />
+					<h:outputText value="Andar" />
+					<h:inputText value="#{MBCpu.cpu.setor.andarsetor}" />
+					
+					<p:outputLabel value="Secretaria" for="txtEdtSetor"  />
+					<p:selectOneMenu value="#{MBCpu.cpu.secretaria.siglasec}"
+					filter = "true"
+					>
+						<f:selectItem itemValue="" itemLabel="Selecione a Secretaria" />
+						<f:selectItems value="#{MBCpur.comboSecretarias}" var="item"
+							itemValue="#{item.codigo_secretaria}"
+							itemLabel="#{item.siglasec}">
+						</f:selectItems>
+					</p:selectOneMenu>
+					
+					<h:outputText value="Bairro" />
+					<h:inputText value="#{MBCpu.cpu.bairro.nomebairo}" />
+					<h:outputText value="Endereço" />
+					<h:inputText value="#{MBCpu.cpu.bairro.endereco}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Editar" actionListener="#{MBCpu.editar}"
+						oncomplete="PF('dlgcpuEditar').hide(); PF('tabelaCpu').clearFilters();"
+						update="frmcpu:tbcpu :msgGlobal" />
+					<p:commandButton value="Cancelar"
+						process="@this"
+						onclick="PF('dlgcpuEditar').hide();" />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="options">
+		<ui:include src="/includes/calendario.xhtml" />
+	</ui:define>
+
+
+
+</ui:composition>			

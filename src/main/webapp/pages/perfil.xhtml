@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSystem.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="frmperfil">
+
+			<p:dataTable id="tbperfil" widgetVar="tabelaPerfil"
+				emptyMessage="Nenhum registro encontrado!" value="#{MBPerfil.itens}"
+				var="item" filteredValue="#{MBPerfil.itensFiltrados}"
+				paginator="true" rows="10" 
+				reflow="true" resizableColumns="true">
+
+				<f:facet name="header">Lista de Perfis</f:facet>
+				
+
+				<p:column headerText="Cargo" sortBy="#{item.funcao}"
+					filterBy="#{item.funcao}">
+					<h:outputText value="#{item.funcao}" />
+				</p:column>
+
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-pencil"
+						oncomplete="PF('dlgperfilEditar').show();"
+						update=":frmperfilEditar:pnperfilEditar">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBPerfil.perfil}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash"
+						oncomplete="PF('dlgperfilExcluir').show();"
+						update=":frmperfilExcluir:pnperfilExcluir">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBPerfil.perfil}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Novo"
+						actionListener="#{MBPerfil.prepararInserir}"
+						oncomplete="PF('dlgperfilNovo').show();"
+						update=":frmperfilNovo:pnperfilNovo" />
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog widgetVar="dlgperfilNovo" closable="false" draggable="false"
+			resizable="false" header="Cadastrar Perfil" modal="true"
+			appendTo="@(body)">
+			<h:form id="frmperfilNovo">
+				<h:panelGrid id="pnperfilNovo" columns="2">
+					<p:outputLabel value="Nome do Perfil" for="txtuserNovo" />
+					<h:inputText size="30" maxlength="50"
+						value="#{MBPerfil.perfil.funcao}" 
+						id="txtuserNovo"
+						required="true" 
+						requiredMessage="Preencha todos os campos!"  />
+
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Gravar"
+						actionListener="#{MBPerfil.inserir}"
+						oncomplete="verificar(xhr, status, args, 'dlgperfilNovo', 'tbperfil');"
+						update="frmperfil:tbperfil :msgGlobal" />
+					<p:commandButton value="Cancelar" process="@this"
+						onclick="PF('dlgperfilNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgperfilExcluir" closable="false"
+			draggable="false" resizable="false" header="Excluir Perfil"
+			modal="true" appendTo="@(body)">
+
+			<h:form id="frmperfilExcluir">
+				<h:panelGrid id="pnperfilExcluir">
+					<h:outputText value="Cargo" />
+					<h:outputText value="#{MBPerfil.perfil.funcao}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Excluir"
+						actionListener="#{MBPerfil.excluir}"
+						oncomplete="PF('dlgperfilExcluir').hide(); PF('tabelaPerfil').clearFilters();"
+						update="frmperfil:tbperfil :msgGlobal" />
+					<p:commandButton value="Cancelar" process="@this"
+						onclick="PF('dlgperfilExcluir').hide(); " />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgperfilEditar" closable="false"
+			draggable="false" resizable="false" header="Editar Perfil"
+			modal="true" appendTo="@(body)">
+
+			<h:form id="frmperfilEditar">
+				<h:panelGrid id="pnperfilEditar">
+					<h:outputText value="Cargo" />
+					<h:inputText value="#{MBPerfil.perfil.funcao}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Editar" actionListener="#{MBPerfil.editar}"
+						oncomplete="PF('dlgperfilEditar').hide(); PF('tabelaPerfil').clearFilters();"
+						update="frmperfil:tbperfil :msgGlobal" />
+
+					<p:commandButton value="Cancelar" process="@this"
+						onclick="PF('dlgperfilEditar').hide();" />
+
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="options">
+		<ui:include src="/includes/calendario.xhtml" />
+	</ui:define>
+
+
+
+</ui:composition>

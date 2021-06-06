@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSystem.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="frmarcas">
+
+			<p:dataTable id="tbmarcas" widgetVar="tabelaMarca"
+				emptyMessage="Nenhum registro encontrado!" value="#{MBMarca.itens}"
+				var="item" filteredValue="#{MBMarca.itensFiltrados}"
+				paginator="true" rows="10"
+				reflow="true">
+
+				<f:facet name="header">Lista de Marcas</f:facet>
+				
+
+				<p:column headerText="Nome" sortBy="#{item.nomemarca}"
+					filterBy="#{item.nomemarca}">
+					<h:outputText value="#{item.nomemarca}" />
+				</p:column>
+
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-pencil"
+						oncomplete="PF('dlgmarcasEditar').show();"
+						update=":frmarcasEditar:pnmarcasEditar">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBMarca.marcas}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash"
+						oncomplete="PF('dlgmarcasExcluir').show();"
+						update=":frmarcasExcluir:pnmarcasExcluir">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBMarca.marcas}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Novo"
+						actionListener="#{MBMarca.prepararInserir}"
+						oncomplete="PF('dlgmarcasNovo').show();"
+						update=":frmarcasNovo:pnmarcasNovo" />
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog widgetVar="dlgmarcasNovo" closable="false" draggable="false"
+			resizable="false" header="Cadastrar Marcas" modal="true"
+			appendTo="@(body)">
+			<h:form id="frmarcasNovo">
+				<h:panelGrid id="pnmarcasNovo" columns="2">
+					<p:outputLabel value="Nome da Marca" for="txtuserNovo"/>
+					<h:inputText size="30" maxlength="50"
+						value="#{MBMarca.marcas.nomemarca}" 
+						id="txtuserNovo"
+						required="true" 
+						requiredMessage="Preencha todos os campos!" />
+
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Gravar"
+						actionListener="#{MBMarca.inserir}"
+						oncomplete="verificar(xhr, status, args, 'dlgmarcasNovo', 'tbmarcas');"
+						update="frmarcas:tbmarcas :msgGlobal" />
+					<p:commandButton value="Cancelar" process="@this"
+						onclick="PF('dlgmarcasNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgmarcasExcluir" closable="false"
+			draggable="false" resizable="false" header="Excluir Marcaa"
+			modal="true" appendTo="@(body)">
+
+			<h:form id="frmarcasExcluir">
+				<h:panelGrid id="pnmarcasExcluir">
+					<h:outputText value="Nome" />
+					<h:outputText value="#{MBMarca.marcas.nomemarca}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Excluir"
+						actionListener="#{MBMarca.excluir}"
+						oncomplete="PF('dlgmarcasExcluir').hide(); PF('tabelaMarca').clearFilters();"
+						update="frmarcas:tbmarcas :msgGlobal" />
+					<p:commandButton value="Cancelar" process="@this"
+						onclick="PF('dlgmarcasExcluir').hide(); " />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgmarcasEditar" closable="false"
+			draggable="false" resizable="false" header="Editar Marca"
+			modal="true" appendTo="@(body)">
+
+			<h:form id="frmarcasEditar">
+				<h:panelGrid id="pnmarcasEditar">
+					<h:outputText value="Nome" />
+					<h:inputText value="#{MBMarca.marcas.nomemarca}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Editar" actionListener="#{MBMarca.editar}"
+						oncomplete="PF('dlgmarcasEditar').hide(); PF('tabelaMarca').clearFilters();"
+						update="frmarcas:tbmarcas :msgGlobal" />
+
+					<p:commandButton value="Cancelar" process="@this"
+						onclick="PF('dlgmarcasEditar').hide();" />
+
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+
+
+
+	<ui:define name="options">
+		<ui:include src="/includes/calendario.xhtml" />
+	</ui:define>
+
+
+
+</ui:composition>
