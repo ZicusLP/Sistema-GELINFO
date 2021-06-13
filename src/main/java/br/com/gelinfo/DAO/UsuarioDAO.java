@@ -8,8 +8,7 @@ import java.util.ArrayList;
 
 import br.com.gelinfo.conexao.ConexaoFactory;
 import br.com.gelinfo.domain.Perfil;
-import br.com.gelinfo.domain.PerfilUsuario;
-import br.com.gelinfo.domain.Setor;
+
 import br.com.gelinfo.domain.Usuario;
 
 public class UsuarioDAO {
@@ -17,7 +16,7 @@ public class UsuarioDAO {
 	// METODO PARA INSERIR
 	public void inserir(Usuario u) throws SQLException {
 		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO usuario (nome,login,senha,telefone,perfil) VALUES (?,?,?,?,?) ");
+		sql.append("INSERT INTO usuario (nome,login,senha,telefone,codigo_perfil) VALUES (?,?,?,?,?) ");
 
 		Connection conexao = ConexaoFactory.conectar();
 
@@ -26,7 +25,7 @@ public class UsuarioDAO {
 		comando.setString(2, u.getLogin());
 		comando.setString(3, u.getSenha());
 		comando.setInt(4, u.getTelefone());
-		comando.setString(5, u.getPerfil());
+		comando.setInt(5, u.getPerfil().getCodigo_perfil());
 
 		comando.executeUpdate();
 
@@ -50,7 +49,7 @@ public class UsuarioDAO {
 	// METODO PARA EDITAR
 	public void editar(Usuario u) throws SQLException {
 		StringBuilder sql = new StringBuilder();
-		sql.append("UPDATE usuario SET nome = ?, login =?, telefone = ?, perfil = ? WHERE codigo_usuario = ?");
+		sql.append("UPDATE usuario SET nome = ?, login =?, telefone = ?, codigo_perfil = ? WHERE codigo_usuario = ?");
 
 		Connection conexao = ConexaoFactory.conectar();
 
@@ -59,7 +58,7 @@ public class UsuarioDAO {
 		comando.setString(1, u.getNome());
 		comando.setString(3, u.getLogin());
 		comando.setInt(4, u.getTelefone());
-		comando.setString(5, u.getPerfil());
+		comando.setInt(5, u.getPerfil().getCodigo_perfil());
 		
 		comando.setInt(5, u.getCodigo_usuario());
 
@@ -121,7 +120,7 @@ public class UsuarioDAO {
 			item.setNome(resultado.getString("nome"));
 			item.setLogin(resultado.getString("login"));
 			item.setTelefone(resultado.getInt("telefone"));
-			item.setPerfil(resultado.getString("perfil"));
+			
 			
 
 			lista.add(item);
@@ -150,7 +149,10 @@ public class UsuarioDAO {
 			u.setNome(resultado.getString("nome"));
 			u.setLogin(resultado.getString("login"));
 			u.setTelefone(resultado.getInt("telefone"));
-			u.setPerfil(resultado.getString("perfil"));
+			
+			Perfil p = new Perfil();
+			p.setCodigo_perfil(resultado.getInt("codigo_perfil"));
+			p.setFuncao(resultado.getString("funcao"));
 					
 			lista.add(u);
 		}
@@ -182,7 +184,11 @@ public class UsuarioDAO {
 				ureturn.setLogin(resultado.getString("login"));
 				ureturn.setSenha(resultado.getString("senha"));
 				ureturn.setTelefone(resultado.getInt("telefone"));
-				ureturn.setPerfil(resultado.getString("perfil"));
+				
+				Perfil p = new Perfil();
+				p.setCodigo_perfil(resultado.getInt("codigo_perfil"));
+				p.setFuncao(resultado.getString("funcao"));
+
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();

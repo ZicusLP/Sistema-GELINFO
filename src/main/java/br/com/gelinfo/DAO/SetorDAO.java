@@ -15,7 +15,7 @@ public class SetorDAO {
 	// METODO PARA INSERIR
 	public void inserir(Setor se) throws SQLException {
 		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO setor (nomesetor,siglasetor,andarsetor, secretaria_codigo, bairro_codigo) VALUES (?,?,?,?,?) ");
+		sql.append("INSERT INTO setor (nomesetor,siglasetor,andarsetor, codigo_secretaria, codigo_bairro) VALUES (?,?,?,?,?) ");
 
 		Connection conexao = ConexaoFactory.conectar();
 
@@ -118,8 +118,8 @@ public class SetorDAO {
 	public ArrayList<Setor> listar() throws SQLException {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT * FROM setor ");
-		sql.append("INNER JOIN secretaria ON codigo_secretaria = secretaria_codigo ");
-		sql.append("INNER JOIN bairro ON codigo_bairro = bairro_codigo");
+		sql.append("INNER JOIN secretaria ON secretaria.codigo_secretaria = setor.codigo_setor  ");
+		sql.append("INNER JOIN bairro ON bairro.codigo_bairro = setor.codigo_setor");
 
 		Connection conexao = ConexaoFactory.conectar();
 

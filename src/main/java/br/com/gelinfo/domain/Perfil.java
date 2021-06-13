@@ -5,6 +5,8 @@ public class Perfil {
 	
 	private int codigo_perfil;
 	private String funcao;
+	
+	
 	public int getCodigo_perfil() {
 		return codigo_perfil;
 	}

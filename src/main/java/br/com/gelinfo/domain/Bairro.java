@@ -26,6 +26,12 @@ public class Bairro {
 		this.endereco = endereco;
 	}
 	
-	
+	@Override
+	public String toString() {
+		String saida = codigo_bairro + " - " + nomebairro + " " + endereco;
+		return saida;
+	}
 
 }
+
+
