@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/layoutSystem.xhtml">
+
+	<ui:define name="menu">
+		<ui:include src="/includes/menu.xhtml" />
+	</ui:define>
+
+	<ui:define name="conteudo">
+
+		<h:form id="frmtipo">
+
+			<p:dataTable id="tbtipo" widgetVar="tabelaTipo_Equipamento"
+				emptyMessage="Nenhum registro encontrado!" value="#{MBTipo.itens}"
+				var="item" filteredValue="#{MBTipo.itensFiltrados}"
+				paginator="true" rows="10"
+				reflow="true">
+
+				<f:facet name="header">Lista de Tipos</f:facet>
+				
+
+				<p:column headerText="Nome" sortBy="#{item.tipo_nome}"
+					filterBy="#{item.tipo_nome}">
+					<h:outputText value="#{item.tipo_nome}" />
+				</p:column>
+
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-pencil"
+						oncomplete="PF('dlgtipoEditar').show();"
+						update=":frmtipoEditar:pntipoEditar">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBTipo.tipo}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash"
+						oncomplete="PF('dlgtipoExcluir').show();"
+						update=":frmtipoExcluir:pntipoExcluir">
+						<f:setPropertyActionListener value="#{item}"
+							target="#{MBTipo.tipo}"></f:setPropertyActionListener>
+					</p:commandButton>
+
+				</p:column>
+
+				<f:facet name="footer">
+					<p:commandButton value="Novo"
+						actionListener="#{MBTipo.prepararInserir}"
+						oncomplete="PF('dlgtipoNovo').show();"
+						update=":frmtipoNovo:pntipoNovo" />
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog widgetVar="dlgtipoNovo" closable="false" draggable="false"
+			resizable="false" header="Cadastrar Tipos" modal="true"
+			appendTo="@(body)">
+			<h:form id="frmtipoNovo">
+				<h:panelGrid id="pntipoNovo" columns="2">
+					<p:outputLabel value="Nome do Tipo" for="txtuserNovo"/>
+					<h:inputText size="30" maxlength="50"
+						value="#{MBTipo.tipo.tipo_nome}" 
+						id="txtuserNovo"
+						required="true" 
+						requiredMessage="Preencha todos os campos!" />
+
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<p:commandButton value="Gravar"
+						actionListener="#{MBTipo.inserir}"
+						oncomplete="verificar(xhr, status, args, 'dlgtipoNovo', 'tbtipo');"
+						update="frmtipo:tbtipo :msgGlobal" />
+					<p:commandButton value="Cancelar" process="@this"
+						onclick="PF('dlgtipoNovo').hide();" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgtipoExcluir" closable="false"
+			draggable="false" resizable="false" header="Excluir Tipo"
+			modal="true" appendTo="@(body)">
+
+			<h:form id="frmtipoExcluir">
+				<h:panelGrid id="pntipoExcluir">
+					<h:outputText value="Nome" />
+					<h:outputText value="#{MBTipo.tipo.tipo_nome}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Excluir"
+						actionListener="#{MBTipo.excluir}"
+						oncomplete="PF('dlgtipoExcluir').hide(); PF('tabelaTipo_Equipamento').clearFilters();"
+						update="frmtipo:tbtipo :msgGlobal" />
+					<p:commandButton value="Cancelar" process="@this"
+						onclick="PF('dlgtipoExcluir').hide(); " />
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgtipoEditar" closable="false"
+			draggable="false" resizable="false" header="Editar Tipo"
+			modal="true" appendTo="@(body)">
+
+			<h:form id="frmtipoEditar">
+				<h:panelGrid id="pntipoEditar">
+					<h:outputText value="Nome" />
+					<h:inputText value="#{MBTipo.tipo.tipo_nome}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<p:commandButton value="Editar" actionListener="#{MBTipo.editar}"
+						oncomplete="PF('dlgtipoEditar').hide(); PF('tabelaTipo_Equipamento').clearFilters();"
+						update="frmtipo:tbtipo :msgGlobal" />
+
+					<p:commandButton value="Cancelar" process="@this"
+						onclick="PF('dlgtipoEditar').hide();" />
+
+				</h:panelGrid>
+
+			</h:form>
+
+		</p:dialog>
+
+
+	</ui:define>
+
+
+</ui:composition>

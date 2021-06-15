@@ -2,7 +2,7 @@ package br.com.gelinfo.domain;
 
 public class Tequipamento {
 	
-	private int codigo_tipo_equipamento;
+	private int codigo_tipo;
 	private String tipo_nome;
 
 	
@@ -14,12 +14,12 @@ public class Tequipamento {
 		this.tipo_nome = tipo_nome;
 	}
 
-	public int getCodigo_tipo_equipamento() {
-		return codigo_tipo_equipamento;
+	public int getCodigo_tipo() {
+		return codigo_tipo;
 	}
 
-	public void setCodigo_tipo_equipamento(int codigo_tipo_equipamento) {
-		this.codigo_tipo_equipamento = codigo_tipo_equipamento;
+	public void setCodigo_tipo(int codigo_tipo) {
+		this.codigo_tipo = codigo_tipo;
 	}
 
 	

@@ -1,0 +1,5 @@
+Para rodar a aplicação é necessário a realização de downloand de alguns componentes:
+1° Baixar, instalar e configurar o JDK em sua máquina.
+2° Baixar, instalar a IDE Eclipse ou qualquer outra que suporte o codigo fonte em Java para rodar a aplicação. 
+3° Baixar, instalar o WampServer em sua máquina(responsável pela conexão com o Banco de Dados).
+4° Após realizar as devidas configurações, abra o sistema na IDE de sua preferência e execute-a.

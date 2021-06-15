@@ -34,5 +34,10 @@
 	/includes/errodeusuario.jsp
 	</location>
 	</error-page>
+	
+	<mime-mapping>
+   <extension>jsp</extension>
+   <mime-type>application/jsp</mime-type>
+</mime-mapping> 
 
 </web-app>
