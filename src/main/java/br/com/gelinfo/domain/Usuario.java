@@ -7,23 +7,23 @@ public class Usuario {
 	private String login;
 	private String senha;
 	private int telefone;
-	//private String perfil;
-	private Perfil perfil;
+	private String perfil;
+	//private Perfil perfil;
 	
 
 	
-	public Perfil getPerfil() {
+	/*public Perfil getPerfil() {
 		return perfil;
 	}
 	public void setPerfil(Perfil perfil) {
 		this.perfil = perfil;
-	}
-	/*public String getPerfil() {
+	}*/
+	public String getPerfil() {
 		return perfil;
 	}
 	public void setPerfil(String perfil) {
 		this.perfil = perfil;
-	}*/
+	}
 	public int getCodigo_usuario() {
 		return codigo_usuario;
 	}
