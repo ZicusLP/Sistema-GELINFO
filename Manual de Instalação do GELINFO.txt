@@ -1,5 +1,9 @@
 Para rodar a aplicação é necessário a realização de downloand de alguns componentes:
 1° Baixar, instalar e configurar o JDK em sua máquina.
-2° Baixar, instalar a IDE Eclipse ou qualquer outra que suporte o codigo fonte em Java para rodar a aplicação. 
-3° Baixar, instalar o WampServer em sua máquina(responsável pela conexão com o Banco de Dados).
-4° Após realizar as devidas configurações, abra o sistema na IDE de sua preferência e execute-a.
+2° Baixar, instalar o WampServer em sua máquina(responsável pela conexão com o Banco de Dados Local).
+3° Para acessar o conteúdo do banco de dados, terá que instalar o MySQL Workbench 8.0.
+4° Executar a IDE Eclipse ou qualquer outra que suporte o codigo fonte em Java para rodar a aplicação. 
+5° Adicione o servidor tomcat ao projeto.
+6° Após realizar as devidas configurações, abra o sistema na IDE de sua preferência e execute-a.
+
+O servidor tomcat, o banco de dados e a IDE estão presentes dentro da pasta do Projeto.
